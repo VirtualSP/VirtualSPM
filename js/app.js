@@ -103,14 +103,14 @@ function ini() {
         function () { handleFiles(); } );
   document.querySelector("#loop").addEventListener("click",
 	function () { chkLoop(); } );
-/*
+
   document.querySelector("#numZ").addEventListener("change",
         function () { changeValueZ(document.querySelector("#numZ").value); });
   document.querySelector("#numY").addEventListener("change",
         function () { changeValueY(document.querySelector("#numY").value); });
   document.querySelector("#numX").addEventListener("change",
         function () { changeValueX(document.querySelector("#numX").value); });
-*/
+
   document.querySelector("#rSp").addEventListener("change",
         function () { changeVolRear(document.querySelector("#rSp").value); });
   document.querySelector("#bass").addEventListener("change",
@@ -232,9 +232,9 @@ function loadnext() {
 
 function loadsrc() {
  var fname;
-    src = URL.createObjectURL(document.getElementsByTagName('input')[3].files[fc]); 
-    fname = document.getElementsByTagName('input')[3].files[fc].name; 
-    showMetaData(document.getElementsByTagName('input')[3].files[fc]);  // ****************************
+    src = URL.createObjectURL(document.getElementsByTagName('input')[6].files[fc]); 
+    fname = document.getElementsByTagName('input')[6].files[fc].name; 
+    showMetaData(document.getElementsByTagName('input')[6].files[fc]);  // ****************************
 	//tfile=fname;
 						
     audio.src=src;	audio.autoplay = true;
