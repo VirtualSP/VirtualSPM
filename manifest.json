@@ -1,0 +1,13 @@
+{
+  "short_name": "web Virtual Speakers",
+  "name": "Virtual Speakers System on the web",
+  "icons": [
+    {
+      "src": "icon_128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }],
+  "start_url":"/index.html",
+  "display": "browser",
+  "orientation": "portrait"
+}
