@@ -343,8 +343,12 @@ function handleMove(evt) {
 	touchDX = -(touchSX - touchEX)/300;
    } 
    touchDY = (touchSY - touchEY)/300;
-   xv = xv - touchDX; //document.getElementById("panValueX").innerHTML="dist_X = "+xv;
-   yv = yv + touchDY; //document.getElementById("panValueY").innerHTML="pos_Y = "+yv;
+   xv = xv - touchDX; 
+	document.querySelector("#numX").value = xv;
+	//document.getElementById("panValueX").innerHTML="dist_X = "+xv;
+   yv = yv + touchDY;
+	document.querySelector("#numY").value = yv;
+	 //document.getElementById("panValueY").innerHTML="pos_Y = "+yv;
    break;
   case 2:
    diffEX = Math.abs( evt.touches[0].pageX - evt.touches[1].pageX );
@@ -352,7 +356,8 @@ function handleMove(evt) {
     zv = zv - 0.1;
    } else {
     zv = zv + 0.1;
-   }   
+   } 
+    document.querySelector("#numZ").value = zv;  
    break;
  }
   //setPos( xv, yv, zv );
