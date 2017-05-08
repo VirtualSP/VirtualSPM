@@ -18,7 +18,7 @@
     }
 ],
  
- "start_url":"/index.html",
+ "start_url":"/VirtualSPM/index.html",
   "display": "browser",
   "orientation": "portrait"
 }
