@@ -363,7 +363,8 @@ function handleMove(evt) {
   //setPos( xv, yv, zv );
 }
 function handleEnd(evt) {
-  evt.preventDefault(); setPos( xv, yv, zv );
+  setPos( xv, yv, zv );
+  evt.preventDefault();
 }
 
 //------------ metedata --------------------------

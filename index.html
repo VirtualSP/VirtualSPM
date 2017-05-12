@@ -14,7 +14,7 @@
 <style>
 input[type='range']  {
 		-webkit-appearance: none ;
-		width:100px;
+		width:200px;
 	}
 	input[type='range']::-webkit-slider-runnable-track {
 		-webkit-appearance: none ;
@@ -43,50 +43,48 @@ input[type='range']  {
 </head>
 
 <body onload="ini()">  
-<b>Virtual Speakers </b><a href="https://virtualsp.github.io/VirtualSPD/index.html">here</a><br>
+<b>Virtual Speakers </b><br>
 
 <canvas id="tCanvas" width="400" height="400" style="border:1px solid #CCC;  z-index: 2"/></canvas>
 <br>
 <label id="fn" >...</label>
 
-<div style="position: absolute; left: 10px; top: 458px;" >
- <span id="panValueX">dist_X = 4</span>
+<div style="position: absolute; left: 10px; top: 460px;" >
+ <span id="panValueX">distance_X</span>
  <input type="range" id="numX" min="-5" max="15" step="0.2" value="4" /></div> 
 
-<div style="position: absolute; left: 220px; top: 458px;" >
- <span id="panValueY" >pos_Y = 2</span> 
+<div style="position: absolute; left: 10px; top: 490px;" >
+ <span id="panValueY" >position_Y</span> 
  <input type="range" id="numY" min="-5" max="15" step="0.2" value="2"  /></div><br>
 
-<div style="position: absolute; left: 10px; top: 500px;" >
- <span id="panValueZ" >pos_Z =-4</span>   
+<div style="position: absolute; left: 10px; top: 520px;" >
+ <span id="panValueZ" >position_Z</span>   
  <input type="range" id="numZ" min="-15" max="5" step="0.2" value="-4" /></div> 
  <br>
 
 
-<div style="position: absolute; left: 20px; top: 545px;" >
- <span id="bassValue">bass = 0</span>
+<div style="position: absolute; left: 10px; top: 550px;" >
+ <span id="bassValue">bass</span>
  <input type="range" id="bass" min="-15" max="15" step="0.2" value="0" /></div>
 
-<div style="position: absolute; left: 220px; top: 545px;" >
- <span id="trebleValue">treble = 0</span>
+<div style="position: absolute; left: 210px; top: 550px;" >
+ <span id="trebleValue">treble</span>
 <input type="range" id="treble" min="-15" max="15" step="0.2" value="0" /></div>
 
 <br>
 
 <div style="position: absolute; left: 10px; top: 580px;" >
- <span id="rspVol">surround = 0.0</span></div>
-
-<div style="position: absolute; left: 130px; top: 580px;" >
- <input type="range" id="rSp" min="0" max="1" step="0.02" /></div>
+ <span id="rspVol">surround</span>
+<input type="range" id="rSp" min="0" max="1" step="0.02" value="0.2" /></div>
 
 <div style="position: absolute; left: 265px; top: 580px;" > 
  Loop=<button id="loop" >OFF</button></div>
 <br> 
 
-<div style="position: absolute; left: 10px; top: 605px;">  
+<div style="position: absolute; left: 10px; top: 610px;">  
  <input type="file" id="input" multiple accept="audio/*"></div>
-<br><br><br><br><br>
-<br><br>
+<br><br><br><br>
+<br><br><br><br>
 
 <div style="position: absolute; left: 120px; top: 70px;" >
 <img id='myimg' style="position: absolute; z-index: -1">
