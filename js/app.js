@@ -104,12 +104,6 @@ function ini() {
   document.querySelector("#loop").addEventListener("click",
 	function () { chkLoop(); } );
 
-  document.querySelector("#numZ").addEventListener("change",
-        function () { changeValueZ(document.querySelector("#numZ").value); });
-  document.querySelector("#numY").addEventListener("change",
-        function () { changeValueY(document.querySelector("#numY").value); });
-  document.querySelector("#numX").addEventListener("change",
-        function () { changeValueX(document.querySelector("#numX").value); });
 
   document.querySelector("#rSp").addEventListener("change",
         function () { changeVolRear(document.querySelector("#rSp").value); });
@@ -193,9 +187,14 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
  el = document.getElementById("tCanvas");
  ctx = el.getContext("experimental-webgl");
  //ctx = renderer;
+
  ctx.canvas.addEventListener("touchstart", handleStart, false);
+	ctx.canvas.addEventListener("mousedown", handleStartm, false);
  ctx.canvas.addEventListener("touchmove", handleMove, false);
+	ctx.canvas.addEventListener("wheel", handlewheelm,false);
+	ctx.canvas.addEventListener("mousemove", handlMovem,false);
  ctx.canvas.addEventListener("touchend", handleEnd, false);
+	ctx.canvas.addEventListener("mouseup", handleEndm, false);
 
 } // -- end of initgl --
 
@@ -232,9 +231,9 @@ function loadnext() {
 
 function loadsrc() {
  var fname;
-    src = URL.createObjectURL(document.getElementsByTagName('input')[6].files[fc]); 
-    fname = document.getElementsByTagName('input')[6].files[fc].name; 
-    showMetaData(document.getElementsByTagName('input')[6].files[fc]);  // ****************************
+    src = URL.createObjectURL(document.getElementsByTagName('input')[3].files[fc]); 
+    fname = document.getElementsByTagName('input')[3].files[fc].name; 
+    showMetaData(document.getElementsByTagName('input')[3].files[fc]);  // ****************************
 	//tfile=fname;
 						
     audio.src=src;	audio.autoplay = true;
@@ -322,33 +321,35 @@ function changeTreble(tvalue) {
     document.querySelector("#treble").value = tvalue;
 }
 
-function handleStart(evt) {
-  evt.preventDefault();
+// ---- swipe & pitch -----
+var isMouseDown = false, needForRAF = true;
+
+function handleStart(evt) { 
+ mf = 1; isMouseDown = true;
+  evt.preventDefault(); 
  switch ( evt.touches.length ) {
   case 1:
    touchDX = 0; touchDY = 0;
    touchSX = evt.touches[0].pageX-200; touchSY = evt.touches[0].pageY-200; break;
   case 2:
-   diffSX = Math.abs( evt.touches[0].pageX - evt.touches[1].pageX ); break
+   diffSX = Math.abs( evt.touches[0].pageX - evt.touches[1].pageX ); break;
  }
 }
+
 function handleMove(evt) {
   evt.preventDefault();
+if ( isMouseDown ) {
  switch ( evt.touches.length ) {
   case 1:
    touchEX = evt.touches[0].pageX-200; touchEY = evt.touches[0].pageY-200;
-   if ( touchSX > 0) {
-	touchDX = (touchSX - touchEX)/300;
+   if ( touchSX > 0) { 
+	touchDX = (touchSX - touchEX)/1000;
    } else {
-	touchDX = -(touchSX - touchEX)/300;
+	touchDX = -(touchSX - touchEX)/1000;
    } 
-   touchDY = (touchSY - touchEY)/300;
-   xv = xv - touchDX; 
-	document.querySelector("#numX").value = xv;
-	//document.getElementById("panValueX").innerHTML="dist_X = "+xv;
+   touchDY = (touchSY - touchEY)/1000;
+   xv = xv - touchDX;
    yv = yv + touchDY;
-	document.querySelector("#numY").value = yv;
-	 //document.getElementById("panValueY").innerHTML="pos_Y = "+yv;
    break;
   case 2:
    diffEX = Math.abs( evt.touches[0].pageX - evt.touches[1].pageX );
@@ -356,15 +357,61 @@ function handleMove(evt) {
     zv = zv - 0.1;
    } else {
     zv = zv + 0.1;
-   } 
-    document.querySelector("#numZ").value = zv;  
+   }   
    break;
  }
-  //setPos( xv, yv, zv );
+ if (needForRAF) {
+    needForRAF = false;            
+    requestAnimationFrame(update); 
+  };
 }
-function handleEnd(evt) {
-  setPos( xv, yv, zv );
+}
+
+function handleEnd(evt) { isMouseDown = false;
   evt.preventDefault();
+}
+
+//----- mouse -------
+
+function handleStartm(evt) {
+  evt.preventDefault(); isMouseDown = true;
+   touchDX = 0; touchDY = 0;
+   touchSX = evt.pageX-200; touchSY = evt.pageY-200;   	
+}
+
+function handlMovem(evt) { evt.preventDefault();
+
+  if (isMouseDown) {
+   
+  	touchEX = evt.pageX-200; touchEY = evt.pageY-200;
+   	if ( touchSX > 0) {
+	touchDX = (touchSX - touchEX)/30;
+   	} else {
+	touchDX = -(touchSX - touchEX)/30;
+   	} 
+
+   touchDY = (touchSY - touchEY)/30;
+   xv = xv - touchDX; 
+   yv = yv + touchDY;  
+
+  if (needForRAF) {
+    needForRAF = false;            
+    requestAnimationFrame(update); 
+  };
+  }
+}
+function update() {
+  needForRAF = true;
+  setPos( xv, yv, zv );
+}
+
+function handlewheelm(evt) { evt.preventDefault();
+   zv = zv - evt.wheelDelta/200;
+  setPos( xv, yv, zv );
+}
+
+function handleEndm(evt) { evt.preventDefault(); 
+ isMouseDown = false; //mf = 0;
 }
 
 //------------ metedata --------------------------
@@ -382,7 +429,7 @@ function showMetaData(data) {
           picture = result.picture[0]; //alert(picture.width);
           var url = URL.createObjectURL(new Blob([picture.data], {'type': 'image/' + picture.format}));
 	  //var im=new Image(); im.src=url.src;
-          image.src = url; image.width=128; image.height=128;
+          image.src = url; image.width=160; image.height=160;
 
 	//var c = document.getElementById('canvas'); 
         //var ctx = c.getContext('2d');  
