@@ -177,7 +177,7 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
     plane.receiveShadow = true;
     renderer.shadowMap.enabled = true;
    renderer.render( scene, camera ); 
-    document.getElementById("fn").innerHTML= "Swipe(xy)/Pinch(z) : Speaker coordinates";
+    //document.getElementById("fn").innerHTML= "Swipe(xy)/Pinch(z) : Speaker coordinates";
 
   //audio = new Audio(src); audio.controls = true; document.body.appendChild(audio); 
     audio.autoplay = true; //audio.volume = 0.5;
@@ -195,7 +195,7 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
 	ctx.canvas.addEventListener("mousemove", handlMovem,false);
  ctx.canvas.addEventListener("touchend", handleEnd, false);
 	ctx.canvas.addEventListener("mouseup", handleEndm, false);
-
+ movsp();
 } // -- end of initgl --
 
 
