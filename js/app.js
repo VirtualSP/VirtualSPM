@@ -10,14 +10,14 @@ var touchSX,touchSY, touchEX,touchEY, touchDX, touchDY, diffSX, diffEX, el,ctx;
 
 var AudioContext = window.AudioContext || window.webkitAudioContext; 
 var audioCtx = new AudioContext();
-
+/*
 var gainL = audioCtx.createGain();
  var gainBL = audioCtx.createGain();
 var gainR = audioCtx.createGain();
  var gainBR = audioCtx.createGain();
 gainL.gain.value = vol; gainBL.gain.value = rv;
 gainR.gain.value = vol; gainBR.gain.value = rv;
-
+*/
 splitter = audioCtx.createChannelSplitter(2);
 
 xv = 4; yv = 2; zv = -4; rv = 0.0; tv = 0; bv = 0; gl=0;
@@ -73,14 +73,14 @@ var delaySR = audioCtx.createDelay(); delaySR.delayTime.value=0.01;
 
 var listener = audioCtx.listener; 
 
-var bass   = audioCtx.createBiquadFilter();
- bass.type   = 'lowshelf';
- bass.frequency.value   =  100;
- bass.gain.value   =  0;
-var treble   = audioCtx.createBiquadFilter();
- treble.type   = 'highshelf';
- treble.frequency.value   =  12000;
- treble.gain.value   =  20;
+var bassL   = audioCtx.createBiquadFilter();
+ bassL.type   = 'lowshelf';
+ bassL.frequency.value   =  100;
+ bassL.gain.value   =  0;
+var trebleL   = audioCtx.createBiquadFilter();
+ trebleL.type   = 'highshelf';
+ trebleL.frequency.value   =  12000;
+ trebleL.gain.value   =  20;
 
 var camera, scene, renderer, canvas,ctx,geometry,material;	
 var cube, plane, light0,Sphere0;	
@@ -256,14 +256,14 @@ function loadsrc() {
 function playGain() {
   source.connect(splitter); 
   //splitter.connect(gainL, 0).connect(pannerL).connect(bass).connect(treble).connect(audioCtx.destination);
-  splitter.connect(pannerL, 0).connect(bass).connect(treble).connect(audioCtx.destination);
+  splitter.connect(pannerL, 0).connect(bassL).connect(trebleL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerBL).connect(delaySL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerSL).connect(delaySL).connect(audioCtx.destination); 
     splitter.connect(gainBL, 0).connect(pannerUL).connect(delaySL).connect(audioCtx.destination);
 	//var pannerUR = pannerBR;    
   
   //splitter.connect(gainR, 1).connect(pannerR).connect(bass).connect(treble).connect(audioCtx.destination); 
-  splitter.connect(pannerR, 1).connect(bass).connect(treble).connect(audioCtx.destination);
+  splitter.connect(pannerR, 1).connect(bassR).connect(trebleR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerBR).connect(delaySR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerSR).connect(delaySR).connect(audioCtx.destination);  
     splitter.connect(gainBR, 1).connect(pannerUR).connect(delaySR).connect(audioCtx.destination);
@@ -307,14 +307,14 @@ function changeVolRear(rSpVol) {
 }
 
 function changeBass(bvalue) {
-  bass.gain.value = bvalue;  
+  bassL.gain.value = bvalue; bassR.gain.value = bvalue; 
   bv = bvalue;  //bv = bvalue*3 + 45;
   //bass.frequency.value   =  bv;
     document.getElementById("bassValue").innerHTML="bass = "+ bv;
     document.querySelector("#bass").value = bvalue;
 }
 function changeTreble(tvalue) {
-  treble.gain.value = tvalue ;  
+  trebleL.gain.value = tvalue ; trebleR.gain.value = tvalue ;  
   tv = tvalue; tvv = -tvalue*500 + 12000;
   //treble.frequency.value   = tvv;
     document.getElementById("trebleValue").innerHTML="treble = "+ tv;
