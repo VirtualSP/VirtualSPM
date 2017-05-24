@@ -81,6 +81,14 @@ var trebleL   = audioCtx.createBiquadFilter();
  trebleL.type   = 'highshelf';
  trebleL.frequency.value   =  12000;
  trebleL.gain.value   =  20;
+var bassR   = audioCtx.createBiquadFilter();
+ bassL.type   = 'lowshelf';
+ bassL.frequency.value   =  100;
+ bassL.gain.value   =  0;
+var trebleR   = audioCtx.createBiquadFilter();
+ trebleL.type   = 'highshelf';
+ trebleL.frequency.value   =  12000;
+ trebleL.gain.value   =  20;
 
 var camera, scene, renderer, canvas,ctx,geometry,material;	
 var cube, plane, light0,Sphere0;	
