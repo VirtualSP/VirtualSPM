@@ -10,14 +10,7 @@ var touchSX,touchSY, touchEX,touchEY, touchDX, touchDY, diffSX, diffEX, el,ctx;
 
 var AudioContext = window.AudioContext || window.webkitAudioContext; 
 var audioCtx = new AudioContext();
-/*
-var gainL = audioCtx.createGain();
- var gainBL = audioCtx.createGain();
-var gainR = audioCtx.createGain();
- var gainBR = audioCtx.createGain();
-gainL.gain.value = vol; gainBL.gain.value = rv;
-gainR.gain.value = vol; gainBR.gain.value = rv;
-*/
+
 splitter = audioCtx.createChannelSplitter(2);
 
 xv = 4; yv = 2; zv = -4; rv = 0.0; tv = 0; bv = 0; gl=0;
@@ -80,7 +73,7 @@ var bassL   = audioCtx.createBiquadFilter();
 var trebleL   = audioCtx.createBiquadFilter();
  trebleL.type   = 'highshelf';
  trebleL.frequency.value   =  12000;
- trebleL.gain.value   =  20;
+ trebleL.gain.value   =  0;
 var bassR   = audioCtx.createBiquadFilter();
  bassL.type   = 'lowshelf';
  bassL.frequency.value   =  100;
@@ -88,7 +81,7 @@ var bassR   = audioCtx.createBiquadFilter();
 var trebleR   = audioCtx.createBiquadFilter();
  trebleL.type   = 'highshelf';
  trebleL.frequency.value   =  12000;
- trebleL.gain.value   =  20;
+ trebleL.gain.value   =  0;
 
 var camera, scene, renderer, canvas,ctx,geometry,material;	
 var cube, plane, light0,Sphere0;	
@@ -263,50 +256,31 @@ function loadsrc() {
 
 function playGain() {
   source.connect(splitter); 
-  //splitter.connect(gainL, 0).connect(pannerL).connect(bass).connect(treble).connect(audioCtx.destination);
+  
   splitter.connect(pannerL, 0).connect(bassL).connect(trebleL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerBL).connect(delaySL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerSL).connect(delaySL).connect(audioCtx.destination); 
     splitter.connect(gainBL, 0).connect(pannerUL).connect(delaySL).connect(audioCtx.destination);
 	//var pannerUR = pannerBR;    
-  
-  //splitter.connect(gainR, 1).connect(pannerR).connect(bass).connect(treble).connect(audioCtx.destination); 
+   
   splitter.connect(pannerR, 1).connect(bassR).connect(trebleR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerBR).connect(delaySR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerSR).connect(delaySR).connect(audioCtx.destination);  
     splitter.connect(gainBR, 1).connect(pannerUR).connect(delaySR).connect(audioCtx.destination);
-  //source.start(0);
+ 
  audio.play();
 }
 
 function setPos(x,y,z) { 
- pannerL.setPosition( -x, y*4, z*3); //pannerL.setOrientation(x,-y*2,-z*3);  
+ pannerL.setPosition( -x, y*4, z*3);   
   pannerBL.setPosition(-x,y*2, -z*3); pannerSL.setPosition(-x*4,y*2, 3*z/2); pannerUL.setPosition(-x/2,y*4, 3*z/2);
- pannerR.setPosition( x,y*4, z*3); //pannerR.setOrientation(-x,-y*2,-z*3); 
+ pannerR.setPosition( x,y*4, z*3); 
   pannerBR.setPosition( x,y*2, -z*3); pannerSR.setPosition( x*4,y*2, 3*z/2); pannerUR.setPosition( x/2,y*4, 3*z/2);
  listener.setPosition( 0, -y, -z );
  movsp();    
 //audio.currentTime=audio.currentTime-0.1; 
 }
 
-function changeValueZ(zvalue) {
- zv = zvalue; //document.getElementById("panValueZ").innerHTML="pos_Z = "+zv;
- //document.querySelector("#numZ").value = zv;
- //localStorage.setItem('numZ', document.getElementById('#numZ').value);
- setPos( xv, yv, zv );  
-}
-
-function changeValueY(yvalue) {  
- yv = yvalue; //document.getElementById("panValueY").innerHTML="pos_Y = "+yv; 
- //document.querySelector("#numY").value = yv;
- setPos( xv, yv, zv );  
-}
-
-function changeValueX(xvalue) {  
- xv = xvalue; //document.getElementById("panValueX").innerHTML="dist_X = "+xv; 
- //document.querySelector("#numX").value = xv;
- setPos( xv, yv, zv ); 
-}
 
 function changeVolRear(rSpVol) {  
  rv = rSpVol; document.getElementById("rspVol").innerHTML="surround = " + rv; 
@@ -408,6 +382,7 @@ function handlMovem(evt) { evt.preventDefault();
   };
   }
 }
+
 function update() {
   needForRAF = true;
   setPos( xv, yv, zv );
@@ -430,48 +405,11 @@ function showMetaData(data) {
        
 	image = document.getElementById('myimg');
 
-         // if (err) {console.log(result);image.src = '';} 
-		//initgls(); //xv=xv+1; movsp(); //renderer.render( scene, camera );
-
-        if (result.picture.length > 0) { //picdata=result.picture;
-          picture = result.picture[0]; //alert(picture.width);
+        if (result.picture.length > 0) { 
+          picture = result.picture[0]; 
           var url = URL.createObjectURL(new Blob([picture.data], {'type': 'image/' + picture.format}));
-	  //var im=new Image(); im.src=url.src;
-          image.src = url; image.width=160; image.height=160;
-
-	//var c = document.getElementById('canvas'); 
-        //var ctx = c.getContext('2d');  
-	//img = document.getElementById('myimg'); //alert(img.width);
-	//ctx.drawImage(im,0,0);ctx.fillRect(0, 0, 4, 4);
-
-	
-	//var loader = new THREE.TextureLoader(); loader.crossOrigin = '*'; loader.setCrossOrigin("anonymous");
-	 //var texture = loader.load('vsp.png'); 
-
-	//var loader = new THREE.TextureLoader(); loader.setCrossOrigin('Anonymous'); 
-	// texture = loader.load(url);
-
-	//texture = new THREE.DataTexture( picture.data, 16, 16, THREE.RGBAFormat );texture.needsUpdate = true;
-
-	//material = new THREE.MeshLambertMaterial({ map: texture });
-
-	//material = new THREE.MeshLambertMaterial({map:texture});
-
-	//var planea = new THREE.Mesh(new THREE.PlaneGeometry(16, 16, 1, 1), 
-	//	new THREE.MeshLambertMaterial({color: 0xfd3d3d}));
-
-	//loader.load(url, function(texture){
-    //var material = new THREE.MeshLambertMaterial({map: texture});
-    //mesh = new THREE.Mesh(geometry, material);
-    //scene.add(mesh);});
-
-	//planea = new THREE.Mesh(new THREE.PlaneGeometry(16, 16), material);
-	//planea.castShadow = true; planea.recieveShadow = true;
-    //planea.position.y = 4; planea.position.z = -24;
-    //planea.rotation.y = Math.PI/8;
-    //scene.add( planea );
-
-	//renderer.render( scene, camera );	
+	 
+          image.src = url; image.width=160; image.height=160;	
 
         }
         else {image.style.visibility = 'hidden';} //var div = document.getElementById('info');
