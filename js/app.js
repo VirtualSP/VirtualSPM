@@ -3,26 +3,26 @@
  */						
 
 var src, source, splitter, audio, fc,flen;
-var xv, yv, zv, vol, rv, tv,tvv, cv, bv, cf,cn2 ,tfile,gl;
- vol = 0.4; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
+var xv, yv, zv, vol, rv, tv,tvv, cv, bv, cf,cn2 ,tfile,gl,mf;
+ vol = 0.5; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
 var obj= {};
+
 var touchSX,touchSY, touchEX,touchEY, touchDX, touchDY, diffSX, diffEX, el,ctx;
 
 var AudioContext = window.AudioContext || window.webkitAudioContext; 
 var audioCtx = new AudioContext();
-
+/*
+var gainL = audioCtx.createGain();
+ var gainBL = audioCtx.createGain();
+var gainR = audioCtx.createGain();
+ var gainBR = audioCtx.createGain();
+gainL.gain.value = vol; gainBL.gain.value = rv;
+gainR.gain.value = vol; gainBR.gain.value = rv;
+*/
 splitter = audioCtx.createChannelSplitter(2);
 
 xv = 4; yv = 2; zv = -4; rv = 0.0; tv = 0; bv = 0; gl=0;
-
-//var gainL = audioCtx.createGain();
- var gainBL = audioCtx.createGain();
-//var gainR = audioCtx.createGain();
- var gainBR = audioCtx.createGain();
-//gainL.gain.value = vol; 
-gainBL.gain.value = rv;
-//gainR.gain.value = vol;
- gainBR.gain.value = rv;
+var vxyz = [4.0, 2.0, -4.0];	// +++++++++++++++++++++++++++++++++++++++
 
 var pannerL = audioCtx.createPanner(); 
  pannerL.panningModel = 'HRTF';
@@ -82,15 +82,17 @@ var bassL   = audioCtx.createBiquadFilter();
 var trebleL   = audioCtx.createBiquadFilter();
  trebleL.type   = 'highshelf';
  trebleL.frequency.value   =  12000;
- trebleL.gain.value   =  0;
+ trebleL.gain.value   =  20;
+
 var bassR   = audioCtx.createBiquadFilter();
- bassL.type   = 'lowshelf';
- bassL.frequency.value   =  100;
- bassL.gain.value   =  0;
+ bassR.type   = 'lowshelf';
+ bassR.frequency.value   =  100;
+ bassR.gain.value   =  0;
 var trebleR   = audioCtx.createBiquadFilter();
- trebleL.type   = 'highshelf';
- trebleL.frequency.value   =  12000;
- trebleL.gain.value   =  0;
+ trebleR.type   = 'highshelf';
+ trebleR.frequency.value   =  12000;
+ trebleR.gain.value   =  20;
+
 
 var camera, scene, renderer, canvas,ctx,geometry,material;	
 var cube, plane, light0,Sphere0;	
@@ -107,22 +109,38 @@ function ini() {
   //var x = document.createElement("INPUT"); x.setAttribute("type", "checkbox");
 
     //audio.autoplay = true;
+
+  //vxyz = JSON.parse(localStorage.getItem("vsp")); alert(vxyz);// +++++++++++++++++++++++
+  //window.onunload = savexyz;
+
   initgls(); //movsp();
 
   document.querySelector("#input").addEventListener("change",
         function () { handleFiles(); } );
   document.querySelector("#loop").addEventListener("click",
 	function () { chkLoop(); } );
-
-
+/*
+  document.querySelector("#numZ").addEventListener("change",
+        function () { changeValueZ(document.querySelector("#numZ").value); });
+  document.querySelector("#numY").addEventListener("change",
+        function () { changeValueY(document.querySelector("#numY").value); });
+  document.querySelector("#numX").addEventListener("change",
+        function () { changeValueX(document.querySelector("#numX").value); });
+*/
   document.querySelector("#rSp").addEventListener("change",
         function () { changeVolRear(document.querySelector("#rSp").value); });
   document.querySelector("#bass").addEventListener("change",
         function () { changeBass(document.querySelector("#bass").value); });
   document.querySelector("#treble").addEventListener("change",
         function () { changeTreble(document.querySelector("#treble").value); });
+ 
 
 }
+
+//function savexyz() { 
+//	//vxyz[0]=xv; vxyz[1]=yv; vxyz[2]=zv; console.log("EE");
+//	vxyz=[10,2.3];
+//	localStorage.setItem("vsp", JSON.stringify(vxyz)); };
 
 var lp = false;
 function chkLoop() {
@@ -187,11 +205,11 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
     plane.receiveShadow = true;
     renderer.shadowMap.enabled = true;
    renderer.render( scene, camera ); 
-    //document.getElementById("fn").innerHTML= "Swipe(xy)/Pinch(z) : Speaker coordinates";
+    document.getElementById("fn").innerHTML= "Swipe(xy)/Pinch(z) : Speaker coordinates";
 
   //audio = new Audio(src); audio.controls = true; document.body.appendChild(audio); 
     audio.autoplay = true; //audio.volume = 0.5;
- // setPos(xv,yv,zv); 
+  setPos(xv,yv,zv); 
  gl=gl+1;
 
  el = document.getElementById("tCanvas");
@@ -201,11 +219,12 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
  ctx.canvas.addEventListener("touchstart", handleStart, false);
 	ctx.canvas.addEventListener("mousedown", handleStartm, false);
  ctx.canvas.addEventListener("touchmove", handleMove, false);
+	//ctx.canvas.addEventListener("mousemove", handleMovem, false);
 	ctx.canvas.addEventListener("wheel", handlewheelm,false);
 	ctx.canvas.addEventListener("mousemove", handlMovem,false);
  ctx.canvas.addEventListener("touchend", handleEnd, false);
 	ctx.canvas.addEventListener("mouseup", handleEndm, false);
- movsp();
+
 } // -- end of initgl --
 
 
@@ -215,6 +234,7 @@ function movsp() {
     cubeL.rotation.x=Math.atan(-yv/zv); cubeR.rotation.x=Math.atan(-yv/zv);
     cubeL.rotation.y=Math.atan(-xv/zv); cubeR.rotation.y=Math.atan(xv/zv); 
  renderer.render( scene, camera ); 
+chkLoop();  // for chrome 57 bug !! 
 }
 
 function startPlay() {  			
@@ -265,36 +285,53 @@ function loadsrc() {
 
 function playGain() {
   source.connect(splitter); 
-  
   splitter.connect(pannerL, 0).connect(bassL).connect(trebleL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerBL).connect(delaySL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerSL).connect(delaySL).connect(audioCtx.destination); 
     splitter.connect(gainBL, 0).connect(pannerUL).connect(delaySL).connect(audioCtx.destination);
 	//var pannerUR = pannerBR;    
-   
+  
   splitter.connect(pannerR, 1).connect(bassR).connect(trebleR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerBR).connect(delaySR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerSR).connect(delaySR).connect(audioCtx.destination);  
     splitter.connect(gainBR, 1).connect(pannerUR).connect(delaySR).connect(audioCtx.destination);
- 
+  //source.start(0);
  audio.play();
 }
 
 function setPos(x,y,z) { 
- pannerL.setPosition( -x, y*4, z*3);   
+ pannerL.setPosition( -x, y*4, z*3); //pannerL.setOrientation(x,-y*2,-z*3);  
   pannerBL.setPosition(-x,y*2, -z*3); pannerSL.setPosition(-x*4,y*2, 3*z/2); pannerUL.setPosition(-x/2,y*4, 3*z/2);
- pannerR.setPosition( x,y*4, z*3); 
+ pannerR.setPosition( x,y*4, z*3); //pannerR.setOrientation(-x,-y*2,-z*3); 
   pannerBR.setPosition( x,y*2, -z*3); pannerSR.setPosition( x*4,y*2, 3*z/2); pannerUR.setPosition( x/2,y*4, 3*z/2);
- listener.setPosition( 0, -y, -z );
+ listener.setPosition( 0, -y*6, -z*8 );
  movsp();    
 //audio.currentTime=audio.currentTime-0.1; 
 }
 
+function changeValueZ(zvalue) {
+ zv = zvalue; //document.getElementById("panValueZ").innerHTML="pos_Z = "+zv;
+ //document.querySelector("#numZ").value = zv;
+ //localStorage.setItem('numZ', document.getElementById('#numZ').value);
+ setPos( xv, yv, zv );  
+}
+
+function changeValueY(yvalue) {  
+ yv = yvalue; //document.getElementById("panValueY").innerHTML="pos_Y = "+yv; 
+ //document.querySelector("#numY").value = yv;
+ setPos( xv, yv, zv );  
+}
+
+function changeValueX(xvalue) {  
+ xv = xvalue; //document.getElementById("panValueX").innerHTML="dist_X = "+xv; 
+ //document.querySelector("#numX").value = xv;
+ setPos( xv, yv, zv ); 
+}
 
 function changeVolRear(rSpVol) {  
  rv = rSpVol; document.getElementById("rspVol").innerHTML="surround = " + rv; 
  document.querySelector("#rSp").value = rv; 
- gainBL.gain.value = -rv; gainBR.gain.value = -rv;
+ gainBL.gain.value = -rv; gainBR.gain.value = -rv; 
 }
 
 function changeBass(bvalue) {
@@ -305,7 +342,7 @@ function changeBass(bvalue) {
     document.querySelector("#bass").value = bvalue;
 }
 function changeTreble(tvalue) {
-  trebleL.gain.value = tvalue ; trebleR.gain.value = tvalue ;  
+  trebleL.gain.value = tvalue ; trebleR.gain.value = tvalue ; 
   tv = tvalue; tvv = -tvalue*500 + 12000;
   //treble.frequency.value   = tvv;
     document.getElementById("trebleValue").innerHTML="treble = "+ tv;
@@ -316,7 +353,7 @@ function changeTreble(tvalue) {
 var isMouseDown = false, needForRAF = true;
 
 function handleStart(evt) { 
- mf = 1; isMouseDown = true;
+ mf = 1; isMouseDown = true; needForRAF = true;
   evt.preventDefault(); 
  switch ( evt.touches.length ) {
   case 1:
@@ -358,7 +395,7 @@ if ( isMouseDown ) {
 }
 }
 
-function handleEnd(evt) { isMouseDown = false;
+function handleEnd(evt) { isMouseDown = false; needForRAF = false;
   evt.preventDefault();
 }
 
@@ -391,7 +428,6 @@ function handlMovem(evt) { evt.preventDefault();
   };
   }
 }
-
 function update() {
   needForRAF = true;
   setPos( xv, yv, zv );
@@ -418,10 +454,9 @@ function showMetaData(data) {
           picture = result.picture[0]; 
           var url = URL.createObjectURL(new Blob([picture.data], {'type': 'image/' + picture.format}));
 	 
-          image.src = url; image.width=160; image.height=160;	
+          image.src = url; image.width=128; image.height=128;	
 
         }
-        else {image.style.visibility = 'hidden';} //var div = document.getElementById('info');
-        //div.innerText = JSON.stringify(result, undefined, 2);
+        else {image.style.visibility = 'hidden';} 
       });
     }
