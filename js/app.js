@@ -15,6 +15,15 @@ splitter = audioCtx.createChannelSplitter(2);
 
 xv = 4; yv = 2; zv = -4; rv = 0.0; tv = 0; bv = 0; gl=0;
 
+//var gainL = audioCtx.createGain();
+ var gainBL = audioCtx.createGain();
+//var gainR = audioCtx.createGain();
+ var gainBR = audioCtx.createGain();
+//gainL.gain.value = vol; 
+gainBL.gain.value = rv;
+//gainR.gain.value = vol;
+ gainBR.gain.value = rv;
+
 var pannerL = audioCtx.createPanner(); 
  pannerL.panningModel = 'HRTF';
  pannerL.distanceModel = 'linear';
