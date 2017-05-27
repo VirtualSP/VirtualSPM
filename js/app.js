@@ -4,21 +4,21 @@
 
 var src, source, splitter, audio, fc,flen;
 var xv, yv, zv, vol, rv, tv,tvv, cv, bv, cf,cn2 ,tfile,gl,mf;
- vol = 0.5; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
+ vol = 0.4; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
 var obj= {};
 
 var touchSX,touchSY, touchEX,touchEY, touchDX, touchDY, diffSX, diffEX, el,ctx;
 
 var AudioContext = window.AudioContext || window.webkitAudioContext; 
 var audioCtx = new AudioContext();
-/*
+
 var gainL = audioCtx.createGain();
  var gainBL = audioCtx.createGain();
 var gainR = audioCtx.createGain();
  var gainBR = audioCtx.createGain();
 gainL.gain.value = vol; gainBL.gain.value = rv;
 gainR.gain.value = vol; gainBR.gain.value = rv;
-*/
+
 splitter = audioCtx.createChannelSplitter(2);
 
 xv = 4; yv = 2; zv = -4; rv = 0.0; tv = 0; bv = 0; gl=0;
@@ -73,7 +73,8 @@ var pannerSR = pannerBR;               //***
 var pannerUR = pannerBR;
 var delaySR = audioCtx.createDelay(); delaySR.delayTime.value=0.01;
 
-var listener = audioCtx.listener; 
+//var listener = audioCtx.listener;
+var listener = audioCtx.Spationallistener; 
 
 var bassL   = audioCtx.createBiquadFilter();
  bassL.type   = 'lowshelf';
@@ -304,7 +305,7 @@ function setPos(x,y,z) {
   pannerBL.setPosition(-x,y*2, -z*3); pannerSL.setPosition(-x*4,y*2, 3*z/2); pannerUL.setPosition(-x/2,y*4, 3*z/2);
  pannerR.setPosition( x,y*4, z*3); //pannerR.setOrientation(-x,-y*2,-z*3); 
   pannerBR.setPosition( x,y*2, -z*3); pannerSR.setPosition( x*4,y*2, 3*z/2); pannerUR.setPosition( x/2,y*4, 3*z/2);
- listener.setPosition( 0, -y*6, -z*8 );
+ //listener.setPosition( 0, -y*6, -z*8 );
  movsp();    
 //audio.currentTime=audio.currentTime-0.1; 
 }
