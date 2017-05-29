@@ -21,8 +21,8 @@ gainR.gain.value = vol; gainBR.gain.value = rv;
 
 splitter = audioCtx.createChannelSplitter(2);
 
-xv = 4; yv = 2; zv = -4; rv = 0.0; tv = 0; bv = 0; gl=0;
-var vxyz = [4.0, 2.0, -4.0];	// +++++++++++++++++++++++++++++++++++++++
+xv = 4.0; yv = 2.1; zv = -4.0; rv = 0.0; tv = 0; bv = 0; gl=0;
+//var vxyz = [4.0, 2.0, -4.0];	// +++++++++++++++++++++++++++++++++++++++
 
 var pannerL = audioCtx.createPanner(); 
  pannerL.panningModel = 'HRTF';
@@ -109,11 +109,8 @@ function ini() {
   source = audioCtx.createMediaElementSource(audio);
   //var x = document.createElement("INPUT"); x.setAttribute("type", "checkbox");
 
-    //audio.autoplay = true;
-
-  //vxyz = JSON.parse(localStorage.getItem("vsp")); alert(vxyz);// +++++++++++++++++++++++
-  //window.onunload = savexyz;
-
+  loadxyz();
+   window.onbeforeunload = function() { savexyz();}
   initgls(); //movsp();
 
   document.querySelector("#input").addEventListener("change",
@@ -135,13 +132,18 @@ function ini() {
   document.querySelector("#treble").addEventListener("change",
         function () { changeTreble(document.querySelector("#treble").value); });
  
-
 }
 
-//function savexyz() { 
-//	//vxyz[0]=xv; vxyz[1]=yv; vxyz[2]=zv; console.log("EE");
-//	vxyz=[10,2.3];
-//	localStorage.setItem("vsp", JSON.stringify(vxyz)); };
+function loadxyz() { 
+	sxv = localStorage.getItem("vspx"); if (sxv) { xv = parseFloat(sxv);};
+	syv = localStorage.getItem("vspy"); if (syv) { yv = parseFloat(syv);};
+	szv = localStorage.getItem("vspz"); if (szv) { zv = parseFloat(szv);};
+};	
+function savexyz() {  
+	localStorage.setItem("vspx",xv.toString()); 
+	localStorage.setItem("vspy",yv.toString()); 
+	localStorage.setItem("vspz",zv.toString()); 
+};
 
 var lp = false;
 function chkLoop() {
@@ -206,7 +208,7 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
     plane.receiveShadow = true;
     renderer.shadowMap.enabled = true;
    renderer.render( scene, camera ); 
-    document.getElementById("fn").innerHTML= "Swipe(xy)/Pinch(z) : Speaker coordinates";
+    document.getElementById("fn").innerHTML= "Drag/Swipe(xy) & Wheel/Pinch(z) to move Speakers";
 
   //audio = new Audio(src); audio.controls = true; document.body.appendChild(audio); 
     audio.autoplay = true; //audio.volume = 0.5;
@@ -309,7 +311,7 @@ function setPos(x,y,z) {
  movsp();    
 //audio.currentTime=audio.currentTime-0.1; 
 }
-
+/*
 function changeValueZ(zvalue) {
  zv = zvalue; //document.getElementById("panValueZ").innerHTML="pos_Z = "+zv;
  //document.querySelector("#numZ").value = zv;
@@ -328,7 +330,7 @@ function changeValueX(xvalue) {
  //document.querySelector("#numX").value = xv;
  setPos( xv, yv, zv ); 
 }
-
+*/
 function changeVolRear(rSpVol) {  
  rv = rSpVol; document.getElementById("rspVol").innerHTML="surround = " + rv; 
  document.querySelector("#rSp").value = rv; 
@@ -397,7 +399,7 @@ if ( isMouseDown ) {
 }
 
 function handleEnd(evt) { isMouseDown = false; needForRAF = false;
-  evt.preventDefault();
+  evt.preventDefault(); //savexyz();
 }
 
 //----- mouse -------
@@ -440,7 +442,7 @@ function handlewheelm(evt) { evt.preventDefault();
 }
 
 function handleEndm(evt) { evt.preventDefault(); 
- isMouseDown = false; //mf = 0;
+ isMouseDown = false; //savexyz(); //mf = 0;
 }
 
 //------------ metedata --------------------------
@@ -455,7 +457,7 @@ function showMetaData(data) {
           picture = result.picture[0]; 
           var url = URL.createObjectURL(new Blob([picture.data], {'type': 'image/' + picture.format}));
 	 
-          image.src = url; image.width=128; image.height=128;	
+          image.src = url; image.width=164; image.height=164;	
 
         }
         else {image.style.visibility = 'hidden';} 
