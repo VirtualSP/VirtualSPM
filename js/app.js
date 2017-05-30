@@ -4,7 +4,7 @@
 
 var src, source, splitter, audio, fc,flen;
 var xv, yv, zv, vol, rv, tv,tvv, cv, bv, cf,cn2 ,tfile,gl,mf;
- vol = 0.4; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
+ vol = 0.6; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
 var obj= {};
 
 var touchSX,touchSY, touchEX,touchEY, touchDX, touchDY, diffSX, diffEX, el,ctx;
@@ -117,6 +117,7 @@ function ini() {
         function () { handleFiles(); } );
   document.querySelector("#loop").addEventListener("click",
 	function () { chkLoop(); } );
+  
 /*
   document.querySelector("#numZ").addEventListener("change",
         function () { changeValueZ(document.querySelector("#numZ").value); });
@@ -146,11 +147,12 @@ function savexyz() {
 };
 
 var lp = false;
-function chkLoop() {
+function chkLoop() { 
+if (isMouseDown === false) {
  if ( document.getElementById('loop').innerHTML === "OFF" ) { 
         document.getElementById('loop').innerHTML = "ON"; lp = true; }
  else { document.getElementById('loop').innerHTML = "OFF"; lp = false; }
-}
+}}
 
 function initgls() {
 
@@ -219,14 +221,14 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
  ctx = el.getContext("experimental-webgl");
  //ctx = renderer;
 
- ctx.canvas.addEventListener("touchstart", handleStart, false);
-	ctx.canvas.addEventListener("mousedown", handleStartm, false);
- ctx.canvas.addEventListener("touchmove", handleMove, false);
+ el.addEventListener("touchstart", handleStart, false);
+	el.addEventListener("mousedown", handleStartm, false);
+ el.addEventListener("touchmove", handleMove, false);
 	//ctx.canvas.addEventListener("mousemove", handleMovem, false);
-	ctx.canvas.addEventListener("wheel", handlewheelm,false);
-	ctx.canvas.addEventListener("mousemove", handlMovem,false);
- ctx.canvas.addEventListener("touchend", handleEnd, false);
-	ctx.canvas.addEventListener("mouseup", handleEndm, false);
+	el.addEventListener("wheel", handlewheelm,false);
+	el.addEventListener("mousemove", handlMovem,false);
+ el.addEventListener("touchend", handleEnd, false);
+	el.addEventListener("mouseup", handleEndm, false);
 
 } // -- end of initgl --
 
@@ -245,7 +247,7 @@ function startPlay() {
         playGain(); setPos( xv, yv, zv ); 
 } 
    
-function handleFiles() {
+function handleFiles() { 
 fc = 0; movsp();
 //audio = new Audio(src);
 var fileInput = document.getElementById("input");
@@ -288,13 +290,14 @@ function loadsrc() {
 
 function playGain() {
   source.connect(splitter); 
-  splitter.connect(pannerL, 0).connect(bassL).connect(trebleL).connect(audioCtx.destination);
+  splitter.connect(gainL, 0).connect(pannerL).connect(bassL).connect(trebleL).connect(audioCtx.destination);
+  //splitter.connect(pannerL, 0).connect(bassL).connect(trebleL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerBL).connect(delaySL).connect(audioCtx.destination);
     splitter.connect(gainBL, 0).connect(pannerSL).connect(delaySL).connect(audioCtx.destination); 
     splitter.connect(gainBL, 0).connect(pannerUL).connect(delaySL).connect(audioCtx.destination);
 	//var pannerUR = pannerBR;    
-  
-  splitter.connect(pannerR, 1).connect(bassR).connect(trebleR).connect(audioCtx.destination);
+  splitter.connect(gainR, 1).connect(pannerR).connect(bassR).connect(trebleR).connect(audioCtx.destination);
+  //splitter.connect(pannerR, 1).connect(bassR).connect(trebleR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerBR).connect(delaySR).connect(audioCtx.destination);
     splitter.connect(gainBR, 1).connect(pannerSR).connect(delaySR).connect(audioCtx.destination);  
     splitter.connect(gainBR, 1).connect(pannerUR).connect(delaySR).connect(audioCtx.destination);
@@ -436,7 +439,7 @@ function update() {
   setPos( xv, yv, zv );
 }
 
-function handlewheelm(evt) { evt.preventDefault();
+function handlewheelm(evt) { evt.preventDefault(); //isMouseDown = true;
    zv = zv - evt.wheelDelta/200;
   setPos( xv, yv, zv );
 }
