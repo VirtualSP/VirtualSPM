@@ -4,7 +4,7 @@
 
 var src, source, splitter, audio, fc,flen;
 var xv, yv, zv, vol, rv, tv,tvv, cv, bv, cf,cn2 ,tfile,gl,mf;
- vol = 0.6; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
+ vol = 0.5; ctlvol = 0.7; cv = 1.0; rv =-0.4; cf = 0;   //***
 var obj= {};
 
 var touchSX,touchSY, touchEX,touchEY, touchDX, touchDY, diffSX, diffEX, el,ctx;
@@ -148,11 +148,14 @@ function savexyz() {
 
 var lp = false;
 function chkLoop() { 
-if (isMouseDown === false) {
- if ( document.getElementById('loop').innerHTML === "OFF" ) { 
-        document.getElementById('loop').innerHTML = "ON"; lp = true; }
- else { document.getElementById('loop').innerHTML = "OFF"; lp = false; }
-}}
+//if (isMouseDown === false) {
+// if ( document.getElementById('loop').innerHTML === "OFF" ) { 
+//        document.getElementById('loop').innerHTML = "ON"; lp = true; }
+// else { document.getElementById('loop').innerHTML = "OFF"; lp = false; }
+//}
+if ( document.getElementById('loop').checked ) { lp = true;  }
+ else { lp = false;}
+}
 
 function initgls() {
 
@@ -266,9 +269,9 @@ function loadnext() {
 
 function loadsrc() {
  var fname;
-    src = URL.createObjectURL(document.getElementsByTagName('input')[3].files[fc]); 
-    fname = document.getElementsByTagName('input')[3].files[fc].name; 
-    showMetaData(document.getElementsByTagName('input')[3].files[fc]);  // ****************************
+    src = URL.createObjectURL(document.getElementsByTagName('input')[4].files[fc]); 
+    fname = document.getElementsByTagName('input')[4].files[fc].name; 
+    showMetaData(document.getElementsByTagName('input')[4].files[fc]);  // ****************************
 	//tfile=fname;
 						
     audio.src=src;	audio.autoplay = true;
@@ -401,8 +404,8 @@ if ( isMouseDown ) {
 }
 }
 
-function handleEnd(evt) { isMouseDown = false; needForRAF = false;
-  evt.preventDefault(); //savexyz();
+function handleEnd(evt) { needForRAF = false;
+  evt.preventDefault(); isMouseDown = false;
 }
 
 //----- mouse -------
