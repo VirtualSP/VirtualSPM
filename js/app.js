@@ -309,6 +309,9 @@ function playGain() {
 }
 
 function setPos(x,y,z) { 
+ if (x>16) { x=16; }
+ if (y>16) { y=16; }
+ if (z<0 ) { z=0;  } 
  pannerL.setPosition( -x, y*4, z*3); //pannerL.setOrientation(x,-y*2,-z*3);  
   pannerBL.setPosition(-x,y*2, -z*3); pannerSL.setPosition(-x*4,y*2, 3*z/2); pannerUL.setPosition(-x/2,y*4, 3*z/2);
  pannerR.setPosition( x,y*4, z*3); //pannerR.setOrientation(-x,-y*2,-z*3); 
