@@ -21,7 +21,7 @@ gainR.gain.value = vol; gainBR.gain.value = rv;
 
 splitter = audioCtx.createChannelSplitter(2);
 
-xv = 4.0; yv = 2.1; zv = -4.0; rv = 0.0; tv = 0; bv = 0; gl=0;
+xv = 6.0; yv = 2.0; zv = -6.0; rv = 0.0; tv = 0; bv = 0; gl=0;
 //var vxyz = [4.0, 2.0, -4.0];	// +++++++++++++++++++++++++++++++++++++++
 
 var pannerL = audioCtx.createPanner(); 
@@ -308,10 +308,11 @@ function playGain() {
  audio.play();
 }
 
+function defpos() {
+ xv=6; yv=2; zv=-6; setPos(xv,yv,zv);
+}
+
 function setPos(x,y,z) { 
- if (x>16) { x=16; }
- if (y>16) { y=16; }
- if (z<0 ) { z=0;  } 
  pannerL.setPosition( -x, y*4, z*3); //pannerL.setOrientation(x,-y*2,-z*3);  
   pannerBL.setPosition(-x,y*2, -z*3); pannerSL.setPosition(-x*4,y*2, 3*z/2); pannerUL.setPosition(-x/2,y*4, 3*z/2);
  pannerR.setPosition( x,y*4, z*3); //pannerR.setOrientation(-x,-y*2,-z*3); 

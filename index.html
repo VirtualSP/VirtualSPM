@@ -44,12 +44,11 @@ input[type='range']  {
 </head>
 
 <body onload="ini()">  
-<b>Web Virtual Speakers </b> 1.2.6<br>
+<b>Web Virtual Speakers </b> 1.2.7<br>
 
 <canvas id="tCanvas" width="400" height="400" style="border:1px solid #CCC;  z-index: 2"/></canvas>
 <br>
 <label id="fn" >Move Speakers by drag/swipe(xy) & wheel/pinch(z)</label>
-
 
 
 <div style="position: absolute; left: 10px; top: 460px;" >
@@ -72,10 +71,14 @@ input[type='range']  {
 </div>
 <br> 
 
+<div style="position: absolute; left: 10px; top: 405px;" >
+<button onclick="defpos()">Force default position</button></div>
+
 <div style="position: absolute; left: 110px; top: 550px;">  
  <input type="file" id="input" multiple accept="audio/*"></div>
 <br><br><br><br>
-<br><br>
+<br>
+<br>
 
 <div style="position: absolute; left: 124px; top: 40px;" >
 <img id='myimg' style="position: absolute; z-index: -1">
