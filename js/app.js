@@ -239,7 +239,7 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
 function movsp() { 
   cubeL.position.setX(-xv); cubeL.position.setY(yv); cubeL.position.setZ(zv);
   cubeR.position.setX(xv);  cubeR.position.setY(yv); cubeR.position.setZ(zv); 
-    cubeL.rotation.x=Math.atan(-yv/zv); cubeR.rotation.x=Math.atan(-yv/zv);
+    cubeL.rotation.x=Math.atan(-yv/zv)/2; cubeR.rotation.x=Math.atan(-yv/zv)/2;
     cubeL.rotation.y=Math.atan(-xv/zv); cubeR.rotation.y=Math.atan(xv/zv); 
  renderer.render( scene, camera ); 
 chkLoop();  // for chrome 57 bug !! 
@@ -384,20 +384,20 @@ if ( isMouseDown ) {
   case 1:
    touchEX = evt.touches[0].pageX-200; touchEY = evt.touches[0].pageY-200;
    if ( touchSX > 0) { 
-	touchDX = (touchSX - touchEX)/1000;
+	touchDX = (touchSX - touchEX)/500;
    } else {
-	touchDX = -(touchSX - touchEX)/1000;
+	touchDX = -(touchSX - touchEX)/500;
    } 
-   touchDY = (touchSY - touchEY)/1000;
+   touchDY = (touchSY - touchEY)/500;
    xv = xv - touchDX;
    yv = yv + touchDY;
    break;
   case 2:
    diffEX = Math.abs( evt.touches[0].pageX - evt.touches[1].pageX );
    if ( diffSX > diffEX ) { 
-    zv = zv - 0.1;
+    zv = zv - 0.2;
    } else {
-    zv = zv + 0.1;
+    zv = zv + 0.2;
    }   
    break;
  }
