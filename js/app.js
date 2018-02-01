@@ -16,8 +16,8 @@ var gainL = audioCtx.createGain();
  var gainBL = audioCtx.createGain();
 var gainR = audioCtx.createGain();
  var gainBR = audioCtx.createGain();
-gainL.gain.value = vol; gainBL.gain.value = rv;
-gainR.gain.value = vol; gainBR.gain.value = rv;
+gainL.gain.setValueAtTime(vol, 0); gainBL.gain.setValueAtTime(rv, 0);
+gainR.gain.setValueAtTime(vol, 0); gainBR.gain.setValueAtTime(rv, 0);
 
 splitter = audioCtx.createChannelSplitter(2);
 
@@ -46,7 +46,7 @@ var pannerBL = audioCtx.createPanner();
  pannerBL.setOrientation(0,0,1);
 var pannerSL = pannerBL;               //***
 var pannerUL = pannerBL; 
-var delaySL = audioCtx.createDelay(); delaySL.delayTime.value=0.01;
+var delaySL = audioCtx.createDelay(); delaySL.delayTime.setValueAtTime(0.01, 0);
 
 var pannerR = audioCtx.createPanner();
  pannerR.panningModel = 'HRTF';
@@ -71,28 +71,28 @@ var pannerBR = audioCtx.createPanner();
  pannerBR.setOrientation(0,0,1);
 var pannerSR = pannerBR;               //***
 var pannerUR = pannerBR;
-var delaySR = audioCtx.createDelay(); delaySR.delayTime.value=0.01;
+var delaySR = audioCtx.createDelay(); delaySR.delayTime.setValueAtTime(0.01, 0);
 
 //var listener = audioCtx.listener;
 var listener = audioCtx.Spationallistener; 
 
 var bassL   = audioCtx.createBiquadFilter();
  bassL.type   = 'lowshelf';
- bassL.frequency.value   =  100;
- bassL.gain.value   =  0;
+ bassL.frequency.setValueAtTime(100, 0);
+ bassL.gain.setValueAtTime(rv, 0);
 var trebleL   = audioCtx.createBiquadFilter();
  trebleL.type   = 'highshelf';
- trebleL.frequency.value   =  12000;
- trebleL.gain.value   =  20;
+ trebleL.frequency.setValueAtTime(12000, 0);
+ trebleL.gain.setValueAtTime(20, 0);
 
 var bassR   = audioCtx.createBiquadFilter();
  bassR.type   = 'lowshelf';
- bassR.frequency.value   =  100;
- bassR.gain.value   =  0;
+ bassR.frequency.setValueAtTime(100, 0);
+ bassR.gain.setValueAtTime(rv, 0);
 var trebleR   = audioCtx.createBiquadFilter();
  trebleR.type   = 'highshelf';
- trebleR.frequency.value   =  12000;
- trebleR.gain.value   =  20;
+ trebleR.frequency.setValueAtTime(12000, 0);
+ trebleR.gain.setValueAtTime(20, 0);
 
 
 var camera, scene, renderer, canvas,ctx,geometry,material;	
@@ -101,7 +101,7 @@ var cube, plane, light0,Sphere0;
 var wX = 400;
 var wY = 400;   
 var meshL,meshR,cubeL, cubeR;
-
+ 
 
 //window.onload = function() { 
 function ini() {
@@ -157,6 +157,7 @@ if ( document.getElementById('loop').checked ) { lp = true;  }
  else { lp = false;}
 }
 
+var cube = []; var dragControls;
 function initgls() {
 
 renderer = new THREE.WebGLRenderer({ canvas: tCanvas , alpha: true }); //******
@@ -182,13 +183,13 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
      var gr = new THREE.MeshLambertMaterial({color: 0x333333});
      var materials = [ br, br, br, br, gr, br ];
    
-        var material_cube = new THREE.MeshFaceMaterial(materials);
-         cubeL = new THREE.Mesh (geometry_cube, material_cube);
+        //var material_cube = new THREE.Mesh(geometry_cube,materials);	//THREE.MeshFaceMaterial(materials);
+         cubeL = new THREE.Mesh (geometry_cube, materials);		//material_cube
          cubeL.position.setX(-xv); cubeL.position.setY(yv); cubeL.position.setZ(zv); 
 		cubeL.rotation.order = "ZYX";          
          cubeL.castShadow = true; 
 	scene.add( cubeL ); 
-         cubeR = new THREE.Mesh (geometry_cube, material_cube);
+         cubeR = new THREE.Mesh (geometry_cube, materials);		//material_cube
          cubeR.position.setX(xv); cubeR.position.setY(yv); cubeR.position.setZ(zv);
 		cubeR.rotation.order = "ZYX";          
          cubeR.castShadow = true; 
@@ -221,9 +222,9 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
  gl=gl+1;
 
  el = document.getElementById("tCanvas");
- ctx = el.getContext("experimental-webgl");
+ //ctx = el.getContext("experimental-webgl");
  //ctx = renderer;
-
+//
  el.addEventListener("touchstart", handleStart, false);
 	el.addEventListener("mousedown", handleStartm, false);
  el.addEventListener("touchmove", handleMove, false);
@@ -232,7 +233,19 @@ var geometry_cube = new THREE.CubeGeometry (2, 3, 1.5);
 	el.addEventListener("mousemove", handlMovem,false);
  el.addEventListener("touchend", handleEnd, false);
 	el.addEventListener("mouseup", handleEndm, false);
+//
+//
+cube.push(cubeR);cube.push(cubeL); 
+/*dragControls = new THREE.DragControls( cube, camera, el ); //renderer.domElement tCanvas
 
+				dragControls.addEventListener( 'dragstart', function ( event ) { 
+				//document.body.style.cursor = "move"; //controls.enabled = false; 
+				} );
+				dragControls.addEventListener( 'dragend', function ( event ) { 
+				 //document.body.style.cursor = "default"; //controls.enabled = true; 
+				} );
+*/
+//
 } // -- end of initgl --
 
 
@@ -390,7 +403,7 @@ if ( isMouseDown ) {
    } 
    touchDY = (touchSY - touchEY)/500;
    xv = xv - touchDX;
-   yv = yv + touchDY;
+   yv = yv + touchDY;	
    break;
   case 2:
    diffEX = Math.abs( evt.touches[0].pageX - evt.touches[1].pageX );
@@ -415,23 +428,23 @@ function handleEnd(evt) { needForRAF = false;
 //----- mouse -------
 
 function handleStartm(evt) {
-  evt.preventDefault(); isMouseDown = true;
+  evt.preventDefault(); isMouseDown = true; document.body.style.cursor = "move";
    touchDX = 0; touchDY = 0;
-   touchSX = evt.pageX-200; touchSY = evt.pageY-200;   	
+   touchSX = evt.pageX-200; touchSY = evt.pageY-200; 
 }
 
-function handlMovem(evt) { evt.preventDefault();
-
-  if (isMouseDown) {
+function handlMovem(evt) { evt.preventDefault(); 
+ 
+  if (isMouseDown) { 
    
   	touchEX = evt.pageX-200; touchEY = evt.pageY-200;
    	if ( touchSX > 0) {
-	touchDX = (touchSX - touchEX)/30;
+	touchDX = (touchSX - touchEX)*(-zv)*0.0004;
    	} else {
-	touchDX = -(touchSX - touchEX)/30;
+	touchDX = -(touchSX - touchEX)*(-zv)*0.0004;
    	} 
 
-   touchDY = (touchSY - touchEY)/30;
+   touchDY = (touchSY - touchEY)/800;
    xv = xv - touchDX; 
    yv = yv + touchDY;  
 
@@ -452,7 +465,7 @@ function handlewheelm(evt) { evt.preventDefault(); //isMouseDown = true;
 }
 
 function handleEndm(evt) { evt.preventDefault(); 
- isMouseDown = false; //savexyz(); //mf = 0;
+ isMouseDown = false; document.body.style.cursor = "default"; //savexyz(); //mf = 0;
 }
 
 //------------ metedata --------------------------
