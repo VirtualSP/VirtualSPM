@@ -397,11 +397,11 @@ if ( isMouseDown ) {
   case 1:
    touchEX = evt.touches[0].pageX-200; touchEY = evt.touches[0].pageY-200;
    if ( touchSX > 0) { 
-	touchDX = (touchSX - touchEX)/500;
+	touchDX = (touchSX - touchEX)*(-zv)*0.0004;	// /500;
    } else {
-	touchDX = -(touchSX - touchEX)/500;
+	touchDX = -(touchSX - touchEX)*(-zv)*0.0004;	// /500;
    } 
-   touchDY = (touchSY - touchEY)/500;
+   touchDY = (touchSY - touchEY)*(-zv)*0.0004;		// /500;
    xv = xv - touchDX;
    yv = yv + touchDY;	
    break;
@@ -444,7 +444,7 @@ function handlMovem(evt) { evt.preventDefault();
 	touchDX = -(touchSX - touchEX)*(-zv)*0.0004;
    	} 
 
-   touchDY = (touchSY - touchEY)/800;
+   touchDY = (touchSY - touchEY)*(-zv)*0.0004;		// /800;
    xv = xv - touchDX; 
    yv = yv + touchDY;  
 
